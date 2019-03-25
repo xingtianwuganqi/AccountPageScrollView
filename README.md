@@ -1,10 +1,11 @@
 # AccountPageScrollView
 iOS Swift简单的吸顶实现，仿抖音、简书、微博个人主页
 要实现一个像抖音这样的个人主页，在网上查了下资料，网上查到这个作者的demo,<https://github.com/QuintGao/GKPageScrollView>,通过看源码理解了实现方法，现在记录下自己的实现的过程
-####效果图
+效果图
 ![gif5.gif](https://upload-images.jianshu.io/upload_images/8042403-94a49179e160a0c7.gif?imageMogr2/auto-orient/strip)
-##实现思路
-###1.整体是tableview，全部由tableview 的tableHeaderView和一行cell组成，tableview 只有一行，行高从导航栏的底部到view的底部
+
+实现思路
+1.整体是tableview，全部由tableview 的tableHeaderView和一行cell组成，tableview 只有一行，行高从导航栏的底部到view的底部
 如图
 ![1181553522063_.pic.jpg](https://upload-images.jianshu.io/upload_images/8042403-bae3d839ccde4067.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -23,7 +24,7 @@ class AccountPageTableView: UITableView,UIGestureRecognizerDelegate {
 
 }
 ```
-###2.在tableview 的一行cell中添加顶部的横行视图和下面的列表视图
+2.在tableview 的一行cell中添加顶部的横行视图和下面的列表视图
 ####  2.1先制定两个协议
 ```
 protocol AccountPageListViewDelegate : NSObjectProtocol {
@@ -119,7 +120,7 @@ extension AccountPageScrollView : UITableViewDelegate,UITableViewDataSource {
     }
 }
 ```
-###3.处理tableview滚动的方法
+3.处理tableview滚动的方法
 ```
 @objc func mainScrollViewDidScroll(scrollView: UIScrollView) {
         // 获取mainScrollview 偏移量
