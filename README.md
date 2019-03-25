@@ -1,6 +1,7 @@
 # AccountPageScrollView
 iOS Swift简单的吸顶实现，仿抖音、简书、微博个人主页
 要实现一个像抖音这样的个人主页，在网上查了下资料，网上查到这个作者的demo,<https://github.com/QuintGao/GKPageScrollView>,通过看源码理解了实现方法，现在记录下自己的实现的过程
+
 效果图
 ![gif5.gif](https://upload-images.jianshu.io/upload_images/8042403-94a49179e160a0c7.gif?imageMogr2/auto-orient/strip)
 
