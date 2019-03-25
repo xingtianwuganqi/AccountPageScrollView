@@ -15,6 +15,13 @@ class HomePageController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         // Do any additional setup after loading the view.
+        let label = UILabel()
+        label.text = "点击进入"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.frame = CGRect(x: 0, y: view.frame.size.height / 2, width: view.frame.size.width, height: 30)
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        view.addSubview(label)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let accountpage = AccountPageViewController()
