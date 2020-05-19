@@ -1,5 +1,16 @@
 # AccountPageScrollView
 iOS Swift简单的吸顶实现，仿抖音、简书、微博个人主页
+HeadSuspensionDemo: 根据自己的思路实现置顶效果
+ tableview + pageViewController 实现置顶效果
+```
+/*
+思路：
+向上滑动：固定listTable,到顶部之后固定主table
+向下滑动：在顶部时固定主table，滑动listTable，listTable滑到0点后，不固定主table，固定listTable
+左右切换listTable时，固定主table
+主table没置顶时，下拉listTable，主table固定
+*/
+```
 要实现一个像抖音这样的个人主页，在网上查了下资料，网上查到这个作者的demo,<https://github.com/QuintGao/GKPageScrollView>,通过看源码理解了实现方法，现在记录下自己的实现的过程
 
 效果图

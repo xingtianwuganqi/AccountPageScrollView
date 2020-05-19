@@ -116,6 +116,13 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource {
 }
 
 extension ViewController {
+    /*
+     思路：
+     向上滑动：固定listTable,到顶部之后固定主table
+     向下滑动：在顶部时固定主table，滑动listTable，listTable滑到0点后，不固定主table，固定listTable
+     左右切换listTable时，固定主table
+     主table没置顶时，下拉listTable，主table固定
+     */
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let topContentOffset = self.tableview.rect(forSection: 0).origin.y
         print("topContentOffset：",topContentOffset)
@@ -185,7 +192,7 @@ extension ViewController {
                     scrollview.setContentOffset(.zero, animated: false)
                 }
             }else{
-                 //如果tableview 没在顶部，list滚动到了0点，tableview可以滚动
+                //如果tableview 没在顶部，list滚动到了0点，tableview可以滚动
                 if scrollview.contentOffset.y > self.listBeginContentOffset {// 向上滑，list一直0点
                     print("listBeginContentOffset：",self.listBeginContentOffset)
                     scrollview.setContentOffset(.zero, animated: false)
