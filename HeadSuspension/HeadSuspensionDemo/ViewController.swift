@@ -35,10 +35,12 @@ class ViewController: UIViewController {
     }()
     
     var isTopSuspension: Bool = false
+    var listBeginScrollBlock: ((UIScrollView) -> Void)?
     var listScrollDidScrollBlock: ((UIScrollView) -> Void)?
     
     weak var currentScrollView: UIScrollView?
     var beginContentOffset: CGFloat = 0
+    var listBeginContentOffset: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +51,7 @@ class ViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(scrollNotification(notifi:)), name: NSNotification.Name("beginHorizontalScroll"), object: nil)
     }
-
+    
     func setTableveiw() {
         
         if #available(iOS 11.0, *) {
@@ -70,6 +72,10 @@ class ViewController: UIViewController {
         tableview.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         tableview.tableHeaderView = headView
     }
+    
+    deinit {
+        print("Deinit")
+    }
 }
 
 extension ViewController: UITableViewDelegate ,UITableViewDataSource {
@@ -82,10 +88,10 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         var cell = tableView.dequeueReusableCell(withIdentifier: "ContentCell") as? ContentCell
         if cell == nil {
-            cell = ContentCell.init(style: .default, reuseIdentifier: "ContentCell", block: self.listScrollDidScrollBlock)
+            cell = ContentCell.init(style: .default, reuseIdentifier: "ContentCell", begin: self.listBeginScrollBlock, block: self.listScrollDidScrollBlock)
         }
         return cell!
     }
@@ -120,6 +126,13 @@ extension ViewController {
                 scrollView.setContentOffset(CGPoint(x: 0,y: topContentOffset), animated: false)
             }else{
                 self.isTopSuspension = false
+                guard let currentScroll = self.getCurrentList() else {
+                    return
+                }
+                // 固定listTableview
+                if currentScroll.contentOffset.y >= 0 {
+                    currentScroll.setContentOffset(.zero, animated: false)
+                }
             }
         }else if scrollView.contentOffset.y < beginContentOffset { // 向下滑
             // 如果是置顶状态
@@ -132,17 +145,21 @@ extension ViewController {
                     scrollView.setContentOffset(CGPoint(x: 0,y: topContentOffset), animated: false)
                 }else{
                     isTopSuspension = false
+                    // 固定listTableview
+                    if currentScroll.contentOffset.y <= 0 {
+                        currentScroll.setContentOffset(.zero, animated: false)
+                    }
                 }
             }else{
                 guard let currentScroll = self.getCurrentList() else {
                     return
                 }
+                // 固定listTableview
                 if currentScroll.contentOffset.y <= 0 {
                     currentScroll.setContentOffset(.zero, animated: false)
                 }else if currentScroll.contentOffset.y > 0 { // 如果tableview没在顶部，list也没在顶部,tableview 固定
-                    self.tableview.isScrollEnabled = false
+                    self.tableview.setContentOffset(CGPoint(x: 0, y: beginContentOffset), animated: false)
                 }
-                
             }
         }
         
@@ -155,19 +172,28 @@ extension ViewController {
 
 extension ViewController {
     func  listScrollBlock() {
+        
+        self.listBeginScrollBlock = { [weak self](scrollview) in
+            self?.listBeginContentOffset = scrollview.contentOffset.y
+        }
+        
         self.listScrollDidScrollBlock = { [weak self](scrollview) in
             guard let `self` = self else { return }
-            
             print("listScrollDidScrollBlock：",scrollview.contentOffset.y)
             if self.isTopSuspension { // 如果已经到顶了
                 if scrollview.contentOffset.y <= 0 {
                     scrollview.setContentOffset(.zero, animated: false)
                 }
             }else{
-                // 如果tableview 没在顶部，list滚动到了0点，tableview可以滚动
-                if scrollview.contentOffset.y <= 0 {
-                    self.tableview.isScrollEnabled = true
+                 //如果tableview 没在顶部，list滚动到了0点，tableview可以滚动
+                if scrollview.contentOffset.y > self.listBeginContentOffset {// 向上滑，list一直0点
+                    print("listBeginContentOffset：",self.listBeginContentOffset)
                     scrollview.setContentOffset(.zero, animated: false)
+                }else{
+                    // 固定listTableview
+                    if scrollview.contentOffset.y <= 0 {
+                        scrollview.setContentOffset(.zero, animated: false)
+                    }
                 }
             }
         }
@@ -175,9 +201,12 @@ extension ViewController {
     // 滑动子视图是禁止tableview 滚动
     @objc func scrollNotification(notifi: Notification) {
         guard let begin = notifi.object as? Bool else{
-            return 
+            return
         }
         self.tableview.isScrollEnabled = !begin
+        if !begin { // 切换之后刷新当前开始位置
+            self.listBeginContentOffset = self.getCurrentList()?.contentOffset.y ?? 0.0
+        }
     }
     
     func getCurrentList() -> UIScrollView? {
@@ -193,9 +222,9 @@ extension ViewController {
 }
 
 class AccountPageTableView: UITableView,UIGestureRecognizerDelegate {
-
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-
+    
 }

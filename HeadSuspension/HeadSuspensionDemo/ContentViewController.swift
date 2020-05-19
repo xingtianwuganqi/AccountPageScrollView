@@ -17,7 +17,7 @@ class ContentViewController: UIViewController {
     
     var pages : [SingleViewController]?
     var scrollBlock: ((UIScrollView) -> Void)?
-
+    var beginScroll: ((UIScrollView) -> Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
 

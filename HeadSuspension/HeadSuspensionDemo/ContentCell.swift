@@ -16,9 +16,9 @@ class ContentCell: UITableViewCell {
     }()
     
     var contentBlock: ((UIScrollView) -> Void)?
-    
-    init(style: UITableViewCell.CellStyle, reuseIdentifier: String?,block: ((UIScrollView) -> Void)?){
+    init(style: UITableViewCell.CellStyle, reuseIdentifier: String?,begin: ((UIScrollView) -> Void)?,block: ((UIScrollView) -> Void)?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        controller.beginScroll = begin
         controller.scrollBlock = block
         setUI()
     }

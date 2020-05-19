@@ -24,6 +24,7 @@ class SingleViewController: UIViewController {
         return tableview
     }()
     var listScrollCallBack: ((UIScrollView) -> Void)?
+    var listBeginCallBack: ((UIScrollView) -> Void)?
     init(block: ((UIScrollView) -> Void)?) {
         super.init(nibName: nil, bundle: nil)
         self.listScrollCallBack = block
@@ -80,5 +81,9 @@ extension SingleViewController: UITableViewDelegate ,UITableViewDataSource {
 extension SingleViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.listScrollCallBack?(scrollView)
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.listBeginCallBack?(scrollView)
     }
 }
