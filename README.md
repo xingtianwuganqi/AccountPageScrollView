@@ -1,5 +1,5 @@
 # AccountPageScrollView
-iOS Swift简单的吸顶实现，仿抖音、简书、微博个人主页
+iOS Swift简单的悬停实现，仿抖音、简书、微博个人主页
 
 HeadSuspensionDemo: 根据自己的思路实现置顶效果
  tableview + pageViewController 实现置顶效果
